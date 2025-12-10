@@ -7,18 +7,18 @@ st.set_page_config(page_title="GranosBot Argentina", layout="wide")
 st.title("🚀 GranosBot Diario – IA para Granos Argentina 2025")
 st.markdown("**Chat IA que responde TODO sobre precios, retenciones, DJVE y más. Desplegado en Streamlit!**")
 
-# Config Groq (usa tu API key en secrets.toml)
+# Config Groq (modelo actualizado: reemplazo oficial del deprecated)
 try:
     llm = ChatGroq(
-        model="llama3-groq-70b-8192-tool-use-preview",  # Modelo válido y estable en Groq (70B, soporta tools/context largo)
+        model="llama-3.3-70b-versatile",  # ¡Nuevo! Reemplazo recomendado por Groq para 2025
         temperature=0.1,
         max_tokens=500
     )
-except:
-    st.error("Revisa tu GROQ_API_KEY en .streamlit/secrets.toml. Sacala gratis en https://console.groq.com/keys")
+except Exception as e:
+    st.error(f"Error al conectar Groq: {e}. Chequeá tu API key en secrets.toml (sacala gratis en https://console.groq.com/keys)")
     st.stop()
 
-# Template con conocimiento base de granos AR (para que responda sin PDFs)
+# Template con conocimiento base de granos AR (para respuestas sin PDFs)
 template = """Sos un trader experto de granos en Rosario, Argentina (diciembre 2025). 
 Usás jerga local: pizarra, DJVE, blend dólar, retenciones (soja 24%, maíz 8.5%, trigo 7.5%), Up-River.
 Datos clave: 
@@ -59,4 +59,4 @@ if prompt_text := st.chat_input("Ej: ¿Cuánto cobra un trader por 1000 TN soja 
                 st.write(response.content)
                 st.session_state.messages.append(AIMessage(content=response.content))
             except Exception as e:
-                st.error(f"Error Groq: {e}. Probá con un prompt más corto o chequeá la API key.")
+                st.error(f"Error Groq: {e}. Probá con un prompt más corto (máx 100 palabras) o chequeá la API key.")
